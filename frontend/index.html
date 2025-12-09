@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>PictoChat</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Room Selection Screen -->
+    <div id="room-select-screen" class="screen active">
+      <div class="ds-frame">
+        <div class="ds-screen top-screen">
+          <div class="screen-content">
+            <h1 class="title">PictoChat</h1>
+            <div class="subtitle">Select a chat room</div>
+            <div class="player-setup">
+              <label for="player-name-input">Your Name:</label>
+              <input type="text" id="player-name-input" maxlength="12" placeholder="Player" autocomplete="off">
+            </div>
+          </div>
+        </div>
+        <div class="ds-hinge"></div>
+        <div class="ds-screen bottom-screen">
+          <div class="screen-content">
+            <div id="room-list" class="room-list">
+              <!-- Rooms populated by JS -->
+            </div>
+            
+            <!-- Custom Room Creation -->
+            <div class="custom-room-section">
+              <div class="custom-room-header">Or create your own:</div>
+              <div class="custom-room-form">
+                <input type="text" id="custom-room-name" maxlength="20" placeholder="Room name..." autocomplete="off">
+                <button id="create-room-btn" class="ds-btn">+ Create</button>
+              </div>
+            </div>
+            
+            <div class="connection-status" id="connection-status-select">
+              <span class="status-dot"></span>
+              <span class="status-text">Ready</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Room Screen -->
+    <div id="chat-screen" class="screen">
+      <div class="ds-frame">
+        <div class="ds-screen top-screen">
+          <div class="screen-content">
+            <div class="chat-header">
+              <span class="room-name" id="current-room-name">Chat A</span>
+              <button id="leave-room-btn" class="ds-btn small">✕ Leave</button>
+            </div>
+            <div class="chat-log" id="chat-log">
+              <!-- Messages populated by JS -->
+            </div>
+            <div class="players-bar" id="players-bar">
+              <!-- Player indicators -->
+            </div>
+          </div>
+        </div>
+        <div class="ds-hinge"></div>
+        <div class="ds-screen bottom-screen">
+          <div class="screen-content">
+            <!-- Drawing Canvas -->
+            <div class="canvas-container">
+              <canvas id="drawing-canvas" width="512" height="192"></canvas>
+              <div class="drawing-indicator" id="drawing-indicator"></div>
+            </div>
+            
+            <!-- Tools -->
+            <div class="tools-bar">
+              <div class="tool-group">
+                <div class="tool-label">Tool:</div>
+                <div class="tool-picker">
+                  <button class="tool-btn active" data-tool="pen" title="Pen">✏️</button>
+                  <button class="tool-btn" data-tool="brush" title="Brush">🖌️</button>
+                  <button class="tool-btn" data-tool="line" title="Line">📏</button>
+                  <button class="tool-btn" data-tool="rect" title="Rectangle">▢</button>
+                  <button class="tool-btn" data-tool="circle" title="Circle">○</button>
+                  <button class="tool-btn" data-tool="fill" title="Fill">🪣</button>
+                  <button class="tool-btn" data-tool="eraser" title="Eraser">🧽</button>
+                </div>
+              </div>
+              
+              <div class="tool-group">
+                <div class="tool-label">Color:</div>
+                <div class="color-picker">
+                  <button class="color-btn active" data-color="#000000" style="background: #000000;"></button>
+                  <button class="color-btn" data-color="#FF0000" style="background: #FF0000;"></button>
+                  <button class="color-btn" data-color="#0000FF" style="background: #0000FF;"></button>
+                  <button class="color-btn" data-color="#00AA00" style="background: #00AA00;"></button>
+                  <button class="color-btn" data-color="#FFAA00" style="background: #FFAA00;"></button>
+                  <button class="color-btn" data-color="#AA00AA" style="background: #AA00AA;"></button>
+                  <button class="color-btn" data-color="#00AAAA" style="background: #00AAAA;"></button>
+                  <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #999;"></button>
+                </div>
+              </div>
+              
+              <div class="tool-group">
+                <div class="tool-label">Size:</div>
+                <div class="size-picker">
+                  <button class="size-btn" data-size="1"><span class="dot s1"></span></button>
+                  <button class="size-btn active" data-size="3"><span class="dot s3"></span></button>
+                  <button class="size-btn" data-size="5"><span class="dot s5"></span></button>
+                  <button class="size-btn" data-size="8"><span class="dot s8"></span></button>
+                  <button class="size-btn" data-size="12"><span class="dot s12"></span></button>
+                </div>
+              </div>
+              
+              <div class="tool-group actions">
+                <button id="undo-btn" class="ds-btn action-btn" title="Undo">↩️ Undo</button>
+                <button id="clear-btn" class="ds-btn action-btn" title="Clear">🗑️ Clear</button>
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <div class="message-bar">
+              <input type="text" id="message-input" maxlength="140" placeholder="Type a message..." autocomplete="off">
+              <button id="send-btn" class="ds-btn">Send</button>
+            </div>
+
+            <!-- Connection Status -->
+            <div class="connection-status" id="connection-status">
+              <span class="status-dot"></span>
+              <span class="status-text">Connecting...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reconnect Banner -->
+    <div id="reconnect-banner" class="reconnect-banner hidden">
+      <span class="reconnect-text">Connection lost. Reconnecting...</span>
+      <div class="reconnect-spinner"></div>
+      <span class="reconnect-queue" id="reconnect-queue"></span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

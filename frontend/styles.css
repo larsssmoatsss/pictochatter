@@ -1,0 +1,821 @@
+/**
+ * PictoChat Clone - Styles
+ * 
+ * Authentic Nintendo DS PictoChat aesthetic
+ * With enhanced mobile support and new drawing tools UI
+ */
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* DS Color Palette */
+  --ds-casing: #c8c8c8;
+  --ds-casing-dark: #a0a0a0;
+  --ds-casing-light: #e0e0e0;
+  --ds-screen-bg: #9bbc0f;
+  --ds-screen-light: #8bac0f;
+  --ds-screen-dark: #306230;
+  --ds-screen-darkest: #0f380f;
+  --ds-hinge: #888888;
+  --ds-border: #404040;
+  
+  /* Modern readable variant */
+  --screen-bg: #c4cfa1;
+  --screen-text: #2d3718;
+  --screen-accent: #5a6e2e;
+  --canvas-bg: #e8ebd8;
+  --input-bg: #d8dcc8;
+  --btn-bg: #b8c090;
+  --btn-hover: #a8b080;
+  --btn-active: #98a070;
+  
+  /* Status colors */
+  --status-connected: #4a7c23;
+  --status-disconnected: #a03030;
+  --status-connecting: #b08020;
+  
+  /* Touch targets */
+  --touch-min: 44px;
+}
+
+html {
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'VT323', monospace;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--screen-text);
+  
+  /* Prevent text selection while drawing */
+  -webkit-user-select: none;
+  user-select: none;
+  
+  /* Smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+#app {
+  width: 100%;
+  max-width: 580px;
+}
+
+/* Screen Transitions */
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* DS Frame Styling */
+.ds-frame {
+  background: linear-gradient(180deg, var(--ds-casing-light) 0%, var(--ds-casing) 20%, var(--ds-casing-dark) 100%);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.ds-screen {
+  background: var(--ds-border);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ds-screen .screen-content {
+  background: var(--screen-bg);
+  border-radius: 4px;
+  padding: 12px;
+  min-height: 160px;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+  
+  /* LCD scanline effect */
+  background-image: 
+    linear-gradient(var(--screen-bg) 50%, rgba(0, 0, 0, 0.02) 50%);
+  background-size: 100% 4px;
+}
+
+.ds-hinge {
+  height: 20px;
+  background: linear-gradient(90deg, 
+    var(--ds-casing) 0%, 
+    var(--ds-hinge) 20%,
+    var(--ds-hinge) 80%,
+    var(--ds-casing) 100%
+  );
+  margin: 8px -16px;
+  position: relative;
+}
+
+.ds-hinge::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 4px;
+  background: linear-gradient(180deg, #666 0%, #888 50%, #666 100%);
+  border-radius: 2px;
+}
+
+/* Room Select Screen */
+.title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 22px;
+  text-align: center;
+  color: var(--screen-darkest);
+  text-shadow: 2px 2px 0 var(--screen-accent);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 18px;
+  color: var(--screen-accent);
+  margin-bottom: 12px;
+}
+
+.player-setup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.player-setup label {
+  font-size: 18px;
+  color: var(--screen-text);
+}
+
+.player-setup input {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 8px 12px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--screen-text);
+  width: 140px;
+  min-height: var(--touch-min);
+}
+
+.player-setup input:focus {
+  outline: none;
+  border-color: var(--screen-accent);
+}
+
+/* Room List */
+.room-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 8px 0;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.room-btn {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 12px 10px;
+  border: 3px solid var(--ds-border);
+  border-radius: 8px;
+  background: var(--btn-bg);
+  color: var(--screen-text);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-align: center;
+  min-height: var(--touch-min);
+  box-shadow: 
+    0 3px 0 var(--ds-border),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  
+  /* Prevent double-tap zoom */
+  touch-action: manipulation;
+}
+
+.room-btn:hover {
+  background: var(--btn-hover);
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 0 var(--ds-border),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.room-btn:active {
+  background: var(--btn-active);
+  transform: translateY(3px);
+  box-shadow: 
+    0 0 0 var(--ds-border),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.room-btn .room-name {
+  display: block;
+  font-weight: bold;
+}
+
+.room-btn .room-players {
+  display: block;
+  font-size: 14px;
+  color: var(--screen-accent);
+  margin-top: 2px;
+}
+
+.room-btn.full {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.room-btn.custom {
+  border-style: dashed;
+}
+
+/* Custom Room Section */
+.custom-room-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px dashed var(--screen-accent);
+}
+
+.custom-room-header {
+  font-size: 14px;
+  color: var(--screen-accent);
+  margin-bottom: 8px;
+}
+
+.custom-room-form {
+  display: flex;
+  gap: 8px;
+}
+
+.custom-room-form input {
+  flex: 1;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--screen-text);
+  min-height: var(--touch-min);
+}
+
+.custom-room-form input:focus {
+  outline: none;
+  border-color: var(--screen-accent);
+}
+
+/* Chat Header */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px dashed var(--screen-accent);
+}
+
+.room-name {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  color: var(--screen-darkest);
+}
+
+/* DS Button Style */
+.ds-btn {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  padding: 8px 14px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--screen-text);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 0 var(--ds-border);
+  min-height: var(--touch-min);
+  touch-action: manipulation;
+}
+
+.ds-btn:hover {
+  background: var(--btn-hover);
+}
+
+.ds-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 var(--ds-border);
+}
+
+.ds-btn.small {
+  font-size: 14px;
+  padding: 6px 10px;
+  min-height: 36px;
+}
+
+/* Chat Log */
+.chat-log {
+  height: 90px;
+  overflow-y: auto;
+  background: var(--canvas-bg);
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.chat-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-log::-webkit-scrollbar-track {
+  background: var(--input-bg);
+}
+
+.chat-log::-webkit-scrollbar-thumb {
+  background: var(--screen-accent);
+  border-radius: 4px;
+}
+
+.chat-message {
+  margin-bottom: 3px;
+  word-wrap: break-word;
+}
+
+.chat-message .timestamp {
+  color: var(--screen-accent);
+  font-size: 13px;
+}
+
+.chat-message .player-name {
+  font-weight: bold;
+  color: var(--screen-darkest);
+}
+
+.chat-message.system {
+  color: var(--screen-accent);
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Players Bar */
+.players-bar {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.player-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--ds-border);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.player-indicator .player-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-connected);
+}
+
+.player-indicator.drawing .player-dot {
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0.5; transform: scale(1.3); }
+}
+
+.player-indicator.self {
+  background: var(--btn-bg);
+  font-weight: bold;
+}
+
+/* Canvas Container */
+.canvas-container {
+  position: relative;
+  background: var(--ds-border);
+  border-radius: 4px;
+  padding: 3px;
+  margin-bottom: 8px;
+  
+  /* Prevent touch scrolling while drawing */
+  touch-action: none;
+}
+
+#drawing-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+  border-radius: 2px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.drawing-indicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 11px;
+  color: var(--screen-accent);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 3px 6px;
+  border-radius: 3px;
+  display: none;
+}
+
+.drawing-indicator.active {
+  display: block;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Tools Bar - Redesigned */
+.tools-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: var(--input-bg);
+  border-radius: 4px;
+  align-items: flex-start;
+}
+
+.tool-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tool-group.actions {
+  flex-direction: row;
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.tool-label {
+  font-size: 12px;
+  color: var(--screen-accent);
+  font-weight: bold;
+}
+
+.tool-picker,
+.color-picker,
+.size-picker {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.tool-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.1s;
+  touch-action: manipulation;
+}
+
+.tool-btn:hover {
+  background: var(--btn-hover);
+}
+
+.tool-btn.active {
+  background: var(--btn-active);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-color: var(--screen-darkest);
+}
+
+.color-btn {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  touch-action: manipulation;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px var(--ds-border);
+  transform: scale(1.1);
+}
+
+.size-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--btn-bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.size-btn:hover {
+  background: var(--btn-hover);
+}
+
+.size-btn.active {
+  background: var(--btn-active);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.size-btn .dot {
+  background: var(--ds-border);
+  border-radius: 50%;
+}
+
+.size-btn .dot.s1 { width: 4px; height: 4px; }
+.size-btn .dot.s3 { width: 6px; height: 6px; }
+.size-btn .dot.s5 { width: 10px; height: 10px; }
+.size-btn .dot.s8 { width: 14px; height: 14px; }
+.size-btn .dot.s12 { width: 18px; height: 18px; }
+
+.action-btn {
+  font-size: 14px;
+  padding: 6px 10px;
+  min-height: 36px;
+}
+
+/* Message Bar */
+.message-bar {
+  display: flex;
+  gap: 8px;
+}
+
+#message-input {
+  flex: 1;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 8px 12px;
+  border: 2px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--canvas-bg);
+  color: var(--screen-text);
+  min-height: var(--touch-min);
+}
+
+#message-input:focus {
+  outline: none;
+  border-color: var(--screen-accent);
+}
+
+#message-input::placeholder {
+  color: var(--screen-accent);
+  opacity: 0.7;
+}
+
+#send-btn {
+  min-width: 70px;
+}
+
+/* Connection Status */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--screen-accent);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-connecting);
+}
+
+.connection-status.connected .status-dot {
+  background: var(--status-connected);
+}
+
+.connection-status.disconnected .status-dot {
+  background: var(--status-disconnected);
+}
+
+/* Reconnect Banner */
+.reconnect-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #a03030 0%, #802020 100%);
+  color: white;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-wrap: wrap;
+}
+
+.reconnect-banner.hidden {
+  display: none;
+}
+
+.reconnect-spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.reconnect-queue {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  
+  .ds-frame {
+    padding: 12px;
+  }
+  
+  .title {
+    font-size: 18px;
+  }
+  
+  .tools-bar {
+    padding: 6px;
+    gap: 6px;
+  }
+  
+  .tool-group.actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 4px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 420px) {
+  body {
+    padding: 6px;
+    align-items: flex-start;
+  }
+  
+  .ds-frame {
+    padding: 8px;
+    border-radius: 12px;
+  }
+  
+  .ds-hinge {
+    height: 16px;
+    margin: 6px -8px;
+  }
+  
+  .ds-screen .screen-content {
+    padding: 8px;
+    min-height: 140px;
+  }
+  
+  .title {
+    font-size: 16px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+  
+  .room-list {
+    grid-template-columns: 1fr;
+    max-height: 150px;
+  }
+  
+  .room-btn {
+    padding: 10px 8px;
+    font-size: 16px;
+  }
+  
+  .chat-log {
+    height: 70px;
+    font-size: 14px;
+  }
+  
+  .player-setup {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .player-setup input {
+    width: 100%;
+  }
+  
+  .tool-label {
+    font-size: 11px;
+  }
+  
+  .tool-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .color-btn {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .size-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .action-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  #message-input {
+    font-size: 16px;
+  }
+}
+
+/* Prevent iOS input zoom */
+@media screen and (max-width: 600px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .reconnect-banner {
+    padding-top: calc(12px + env(safe-area-inset-top));
+  }
+  
+  body {
+    padding-left: calc(6px + env(safe-area-inset-left));
+    padding-right: calc(6px + env(safe-area-inset-right));
+    padding-bottom: calc(6px + env(safe-area-inset-bottom));
+  }
+}
