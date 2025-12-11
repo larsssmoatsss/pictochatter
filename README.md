@@ -2,6 +2,8 @@
 
 A real-time collaborative drawing and messaging application inspired by Nintendo DS PictoChat. Built to explore **distributed systems patterns**, **real-time synchronization**, and **persistent messaging** - core concepts in enterprise architecture.
 
+### **[Live Demo, try here with a friend!](https://pictochatter.onrender.com/)**
+
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
 ![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=flat&logo=socketdotio&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
@@ -250,31 +252,6 @@ pictochatter/
 ├── LICENSE              # MIT License
 └── README.md
 ```
-
----
-
-## Future Enhancements
-
-### Planned Features
-- [ ] **User Authentication** - Login system with persistent identities
-- [ ] **Drawing Layers** - Multiple layers like professional drawing apps
-- [ ] **Image Export** - Save canvas as PNG/JPG
-- [ ] **Replay Mode** - Watch drawing playback like a timelapse
-- [ ] **Emoji Reactions** - React to messages with emoji
-
-### Scalability Improvements
-- [ ] **Redis Pub/Sub** - Replace in-memory broadcasting for horizontal scaling
-- [ ] **PostgreSQL** - Production database with better concurrency
-- [ ] **Load Balancing** - Sticky sessions for WebSocket connections
-- [ ] **CDN for Assets** - Serve static files from edge locations
-
-### Deployment Options
-- [ ] **Docker Compose** - Containerized deployment
-- [ ] **Railway/Render** - One-click cloud deployment
-- [ ] **AWS/GCP** - Production infrastructure with auto-scaling
-
----
-
 ## Deployment
 
 ### Local Development
@@ -284,9 +261,9 @@ npm run dev  # Auto-restart on file changes (Node 18+)
 
 ### Production Deployment
 
-**Option 1: Railway (Recommended for simplicity)**
+**Option 1: Render (Recommended for simplicity)**
 1. Push to GitHub
-2. Connect repository to [Railway](https://railway.app)
+2. Connect repository to [Render](https://render.com)
 3. Deploy automatically
 
 **Option 2: Docker**
